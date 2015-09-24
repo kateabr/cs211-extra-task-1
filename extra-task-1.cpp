@@ -168,6 +168,8 @@ double time_to_utc(int utc_offset, double time)
 
 double time_from_utc(int utc_offset, double time)
 {
+	int time_temp = time;
+	return (24 + time_temp + utc_offset) % 24 + (time - time_temp);
     /*
         Return UTC time in time zone utc_offset.
 
@@ -229,4 +231,13 @@ int main()
 	assert(abs(time_to_utc(-11, 18.0) - 5.0) < DBL_EPSILON, "test_5.4");
 	assert(abs(time_to_utc(-1, 0.0) - 1.0) < DBL_EPSILON, "test_5.5");
 	assert(abs(time_to_utc(-1, 23.0)) < DBL_EPSILON, "test_5.6");
+	
+	assert(abs(time_from_utc(+0, 12.0) - 12.0) < DBL_EPSILON, "test_6.1");
+	assert(abs(time_from_utc(+1, 12.0) - 13.0) < DBL_EPSILON, "test_6.2");
+	assert(abs(time_from_utc(-1, 12.0) - 11.0) < DBL_EPSILON, "test_6.3");
+	assert(abs(time_from_utc(+6, 6.0) - 12.0) < DBL_EPSILON, "test_6.4");
+	assert(abs(time_from_utc(-7, 6.0) - 23.0) < DBL_EPSILON, "test_6.5");
+	assert(abs(time_from_utc(-1, 0.0) - 23.0) < DBL_EPSILON, "test_6.6");
+	assert(abs(time_from_utc(-1, 23.0) - 22.0) < DBL_EPSILON, "test_6.7");
+	assert(abs(time_from_utc(+1, 23.0)) < DBL_EPSILON, "test_6.8");
 }
