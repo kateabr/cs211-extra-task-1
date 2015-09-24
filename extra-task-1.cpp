@@ -138,6 +138,8 @@ int get_seconds(int seconds)
 
 double time_to_utc(int utc_offset, double time)
 {
+	int time_temp = time;
+	return ((24 + time_temp - utc_offset) % 24) + (time - time_temp);
     /*
         Return time at UTC+0, where utc_offset is the number of hours away from
         UTC+0.
@@ -220,4 +222,11 @@ int main()
 	assert(get_hours(3800) == 1, "get_hours");
 	assert(get_minutes(3800) == 3, "get_minutes");
 	assert(get_seconds(3800) == 20, "get_seconds");
+	
+	assert(abs(time_to_utc(+0, 12.0) - 12.0)<DBL_EPSILON, "test_5.1");
+	assert(abs(time_to_utc(+1, 12.0) - 11.0) < DBL_EPSILON, "test_5.2");
+	assert(abs(time_to_utc(-1, 12.0) - 13.0) < DBL_EPSILON, "test_5.3");
+	assert(abs(time_to_utc(-11, 18.0) - 5.0) < DBL_EPSILON, "test_5.4");
+	assert(abs(time_to_utc(-1, 0.0) - 1.0) < DBL_EPSILON, "test_5.5");
+	assert(abs(time_to_utc(-1, 23.0)) < DBL_EPSILON, "test_5.6");
 }
